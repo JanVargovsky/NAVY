@@ -2,55 +2,15 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace NAVY.Lesson1
 {
-    class Perceptron
-    {
-        readonly double[] w;
-        double b;
-
-        public Perceptron(double[] w, double b)
-        {
-            this.w = w;
-            this.b = b;
-        }
-
-        public void AdjustWeights(int[] x, int y)
-        {
-            Debug.Assert(w.Length == x.Length);
-
-            const double LearningConstant = 0.01d;
-
-            double guess = Evaluate(x);
-            double error = y - guess;
-            for (int i = 0; i < w.Length; i++)
-            {
-                var newW = w[i] + error * x[i] * LearningConstant;
-                Console.WriteLine($"w[{i}] = {w[i]} => {newW}");
-                w[i] = newW;
-            }
-            var newB = b + error * LearningConstant;
-            Console.WriteLine($"b = {b} => {newB}");
-            b = newB;
-        }
-
-        public int Evaluate(int[] x)
-        {
-            Debug.Assert(w.Length == x.Length);
-
-            double sum = b;
-            for (int i = 0; i < w.Length; i++)
-                sum += w[i] * x[i];
-            return Math.Sign(sum);
-        }
-
-        public override string ToString() => $"w=[{string.Join(", ", w)}], bias={b}";
-    }
 
     class Program
     {
-        static Random random = new Random();
+        static Random random = new Random(42);
 
         Perceptron GetPerceptron(IEnumerable<(int[] Inputs, int Output)> data)
         {
@@ -85,7 +45,7 @@ namespace NAVY.Lesson1
             return perceptron;
         }
 
-        static void Main(string[] args)
+        async static Task Main(string[] args)
         {
             var p = new Program();
 
@@ -102,6 +62,27 @@ namespace NAVY.Lesson1
             Debug.Assert(perceptron.Evaluate(new[] { 5, 8 }) == 1);
             Debug.Assert(perceptron.Evaluate(new[] { -5, 8 }) == -1);
             Console.WriteLine(perceptron);
+            var nonImplication = new(int[], int)[]
+            {
+                (new[] { 0, 0 }, 1),
+                (new[] { 1, 0 }, -1),
+                (new[] { 0, 1 }, 1),
+                (new[] { 1, 1 }, 1),
+            };
+            var perceptron1 = p.GetPerceptron(nonImplication);
+
+            var xorData = new(int[], int)[]
+            {
+                (new[] { 0, 0 }, 0),
+                (new[] { 1, 0 }, 1),
+                (new[] { 0, 1 }, 1),
+                (new[] { 1, 1 }, 0),
+            };
+            CancellationToken cancellationToken = default;
+            var perceptron2Task = Task.Run(() => p.GetPerceptron(xorData), cancellationToken);
+            var task = await Task.WhenAny(perceptron2Task, Task.Delay(TimeSpan.FromSeconds(5)));
+            if (task == perceptron2Task)
+                throw new Exception("Impossible");
         }
     }
 }
