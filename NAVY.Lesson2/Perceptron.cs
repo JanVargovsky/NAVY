@@ -33,7 +33,7 @@ namespace NAVY.Lesson2
         {
             double guess = Evaluate(x);
             double error = y - guess;
-            return error;
+            return Math.Abs(error);
         }
 
         public double Evaluate(double[] x)
@@ -44,6 +44,10 @@ namespace NAVY.Lesson2
             for (int i = 0; i < x.Length; i++)
                 sum += w[i] * x[i];
             return sum >= w[w.Length - 1] ? 1 : 0;
+            //double sum = w[w.Length - 1];
+            //for (int i = 0; i < x.Length; i++)
+            //    sum += w[i] * x[i];
+            //return Math.Sign(sum) / 2d + 0.5;
         }
 
         internal static Perceptron GetRandomPerceptron(Random random, int inputLength) => new Perceptron(

@@ -14,8 +14,11 @@ namespace NAVY.Lesson2
                 (new[] { 1d, 1d }, 0),
             };
             var xorNeuralNet = new NeuralNet(2);
-            while(!xorNeuralNet.Train(xorData));
 
+            int i = 0;
+            while(!xorNeuralNet.Train(xorData)) i++;
+
+            Console.WriteLine($"Training took {i} epochs");
             Console.WriteLine(xorNeuralNet);
         }
     }
