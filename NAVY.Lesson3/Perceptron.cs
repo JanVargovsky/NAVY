@@ -37,9 +37,8 @@ namespace NAVY.Lesson3
             return result;
         }
 
-        // http://www.wolframalpha.com/input/?i=derivate+1+%2F+(1+%2B+e%5E(-x))
-        public static double Derivative(double x) => 
-            Math.Exp(-x) / Math.Pow((1 + Math.Exp(-x)), 2);
+        public static double Derivative(double x) =>
+            x * (1 - x);
     }
 
     class OutputPerceptron : IPerceptron

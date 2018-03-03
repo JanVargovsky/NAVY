@@ -13,7 +13,7 @@ namespace NAVY.Lesson3
                 (new[] { 0d, 1d }, 1d),
                 (new[] { 1d, 1d }, 0),
             };
-            var xorNN = new XorNeuralNet();
+            var xorNN = new XorNeuralNet(true);
             double AcceptedError = 1e-5;
 
             int epochCount = 0;
