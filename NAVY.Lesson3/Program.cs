@@ -16,10 +16,11 @@ namespace NAVY.Lesson3
             var xorNN = new XorNeuralNet();
             double AcceptedError = 1e-5;
 
+            int epochCount = 0;
             bool allCorrect;
             do
             {
-                Console.WriteLine("results:");
+                Console.WriteLine($"results ({epochCount++}):");
                 allCorrect = true;
                 foreach (var (input, expected) in xorTrainingData)
                 {
