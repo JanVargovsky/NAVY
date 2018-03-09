@@ -13,14 +13,14 @@ namespace NAVY.Lesson3
                 (new[] { 0d, 1d }, 1d),
                 (new[] { 1d, 1d }, 0),
             };
-            var xorNN = new XorNeuralNet(true);
-            double AcceptedError = 1e-5;
+            var xorNN = new XorNeuralNet(false);
+            double AcceptedError = 1e-6;
 
             int epochCount = 0;
             bool allCorrect;
             do
             {
-                Console.WriteLine($"results ({epochCount++}):");
+                Console.WriteLine($"results ({epochCount}):");
                 allCorrect = true;
                 foreach (var (input, expected) in xorTrainingData)
                 {
@@ -36,7 +36,9 @@ namespace NAVY.Lesson3
                     Console.WriteLine($"({string.Join(",", input)}), expected={expected}, actual={actual:n5}");
                     Console.ResetColor();
                 }
+                epochCount++;
             } while (!allCorrect);
+            Console.WriteLine($"Learned after {epochCount} epoch(s)");
         }
     }
 }
