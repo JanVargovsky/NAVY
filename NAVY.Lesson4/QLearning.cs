@@ -44,7 +44,7 @@ namespace NAVY.Lesson4
                 //ConsoleExtensions.WriteMatrix(Q, "Q");
             }
 
-            ConsoleExtensions.WriteMatrix(Q, "Final Q");
+            //ConsoleExtensions.WriteMatrix(Q, "Final Q");
         }
 
         public void WritePath(Point pointStart, Point pointEnd)

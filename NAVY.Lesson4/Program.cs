@@ -7,17 +7,18 @@ namespace NAVY.Lesson4
         static void Main(string[] args)
         {
             const float Gamma = 0.8f;
-            const int Size = 3;
+            const int Size = 4;
             const int Episodes = 1000;
-            const int Blocks = 0;
+            const int Blocks = 5;
 
             Random r = new Random(42);
-            FindTheCheeseSettings findTheCheese = FindTheCheeseSettings.Generate(r, Size, Blocks);
+            FindTheCheese findTheCheese = FindTheCheese.Generate(r, Size, Blocks);
             QLearning qLearning = new QLearning(Gamma);
             findTheCheese.Set(qLearning);
             ConsoleExtensions.WriteMatrix(qLearning.R, "R");
 
             qLearning.Learn(findTheCheese.Start, findTheCheese.Cheese, Episodes, Size, r);
+            ConsoleExtensions.WriteMatrix(qLearning.Q, "Final Q");
             qLearning.WritePath(findTheCheese.Start, findTheCheese.Cheese);
         }
     }

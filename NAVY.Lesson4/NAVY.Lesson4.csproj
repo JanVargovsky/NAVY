@@ -9,4 +9,10 @@
     <PackageReference Include="morelinq" Version="2.10.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="System">
+      <HintPath>System</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

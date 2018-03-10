@@ -36,14 +36,14 @@ namespace NAVY.Lesson4
         }
     }
 
-    public class FindTheCheeseSettings
+    public class FindTheCheese
     {
         public int Size { get; private set; }
         public Point Start { get; private set; }
         public List<Point> Blocks { get; private set; }
         public Point Cheese { get; private set; }
 
-        public static FindTheCheeseSettings Generate(Random r, int size, int blocks) => new FindTheCheeseSettings
+        public static FindTheCheese Generate(Random r, int size, int blocks) => new FindTheCheese
         {
             Size = size,
             Blocks = Enumerable.Range(0, blocks)
@@ -52,6 +52,15 @@ namespace NAVY.Lesson4
             Start = new Point(0, 0),
             Cheese = new Point(size - 1, size - 1)
         };
+
+        internal bool CanMove(Point from, Point to)
+        {
+            var rowDiff = Math.Abs(from.Row - to.Row);
+            var colDiff = Math.Abs(from.Col - to.Col);
+            //return (rowDiff <= 1 && colDiff <= 1) && (rowDiff == 1f) != (colDiff == 1f);
+            //return (rowDiff == 0f && colDiff == 1f) || (rowDiff == 1f && colDiff == 0f);
+            return rowDiff + colDiff == 1;
+        }
 
         public void Set(QLearning q)
         {
@@ -75,14 +84,6 @@ namespace NAVY.Lesson4
             Fill(q.Q, 0);
             Fill(q.R, -1);
 
-            bool CanMove(Point from, Point to)
-            {
-                var rowDiff = Math.Abs(from.Row - to.Row);
-                var colDiff = Math.Abs(from.Col - to.Col);
-                //return (rowDiff <= 1 && colDiff <= 1) && (rowDiff == 1f) != (colDiff == 1f);
-                return (rowDiff == 0f && colDiff == 1f) || (rowDiff == 1f && colDiff == 0f);
-            }
-
             foreach (var from in points)
             {
                 foreach (var to in points)
@@ -91,7 +92,7 @@ namespace NAVY.Lesson4
                     {
                         float value = 0;
                         if (Blocks.Contains(to))
-                            value = -1;
+                            value = -10;
                         if (Start.Equals(to))
                             value = 0;
                         if (Cheese.Equals(to))
