@@ -47,6 +47,8 @@ namespace NAVY.Lesson5
         const char TopRightBorderChar = '╗';
         const char BottomLeftBorderChar = '╚';
         const char BottomRightBorderChar = '╝';
+        const char FilledChar = '█';
+        const char EmptyChar = ' ';
 
         static StringBuilder PrintToStringBuilder(Vector<float> u, int n)
         {
@@ -59,7 +61,7 @@ namespace NAVY.Lesson5
             {
                 sb.Append(VerticalBorderChar);
                 for (int x = 0; x < n; x++)
-                    sb.Append($"{(u[y * n + x] == 1f ? '#' : ' ')}");
+                    sb.Append($"{(u[y * n + x] == 1f ? FilledChar : EmptyChar)}");
                 sb.Append(VerticalBorderChar).AppendLine();
             }
             sb.AppendLine($"{BottomLeftBorderChar}{horizontalBorderLine}{BottomRightBorderChar}");
@@ -75,7 +77,7 @@ namespace NAVY.Lesson5
             {
                 sb.Append(VerticalBorderChar);
                 for (int x = 0; x < n; x++)
-                    sb.Append($"{(a[y * n + x] == 1f ? '#' : ' ')}");
+                    sb.Append($"{(a[y * n + x] == 1f ? FilledChar : EmptyChar)}");
                 sb.Append(VerticalBorderChar);
             }
 

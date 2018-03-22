@@ -20,7 +20,7 @@ namespace NAVY.Lesson5
 
         static void Main(string[] args)
         {
-            Test();
+            //Test();
 
             const int N = 8;
             var hopfield = new Hopfield(N);
@@ -29,7 +29,7 @@ namespace NAVY.Lesson5
             foreach (var letter in letters)
                 Letters.Print(letter);
 
-            var noiseLevels = new[] { 0, 5, 10, 20, 30, 31, 32, 33, 35, 40, 45, 50 };
+            var noiseLevels = new[] { 5, 30, 31, 32, 33, 50 };
 
             foreach (var letter in letters)
             {
