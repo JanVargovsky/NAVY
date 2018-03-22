@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
@@ -17,7 +18,7 @@ namespace NAVY.Lesson6
             InitializeComponent();
         }
 
-        void NumbersOnlyValidation(object sender, System.Windows.Input.TextCompositionEventArgs e)
+        void NumbersOnlyValidation(object sender, TextCompositionEventArgs e)
         {
             e.Handled = Regex.IsMatch(e.Text, "[^0-9]+");
         }
@@ -74,7 +75,7 @@ namespace NAVY.Lesson6
             var l = new LSystem(Axiom, new Dictionary<char, string>
             {
                 ['F'] = F,
-            }, 20, 60);
+            }, 60);
             AddPointsToCanvas(l);
         }
 
@@ -85,7 +86,7 @@ namespace NAVY.Lesson6
             var l = new LSystem(Axiom, new Dictionary<char, string>
             {
                 ['F'] = F,
-            }, 20, 90);
+            }, 90);
             AddPointsToCanvas(l);
         }
 
@@ -96,7 +97,7 @@ namespace NAVY.Lesson6
             var l = new LSystem(Axiom, new Dictionary<char, string>
             {
                 ['F'] = F,
-            }, 20, 90);
+            }, 90);
             AddPointsToCanvas(l);
         }
 
@@ -109,7 +110,7 @@ namespace NAVY.Lesson6
             {
                 ['F'] = F,
                 ['G'] = G,
-            }, 20, 120);
+            }, 120);
             AddPointsToCanvas(l);
         }
 
@@ -122,7 +123,7 @@ namespace NAVY.Lesson6
             {
                 ['A'] = A,
                 ['B'] = B,
-            }, 20, 60);
+            }, 60);
             AddPointsToCanvas(l);
         }
     }

@@ -7,14 +7,12 @@ namespace NAVY.Lesson6
     {
         readonly string axiom;
         readonly IDictionary<char, string> rules;
-        readonly double shift;
         readonly double angle;
 
-        public LSystem(string axiom, IDictionary<char, string> rules, double shift, double angle)
+        public LSystem(string axiom, IDictionary<char, string> rules, double angle)
         {
             this.axiom = axiom;
             this.rules = rules;
-            this.shift = shift;
             this.angle = angle;
         }
 
@@ -34,8 +32,8 @@ namespace NAVY.Lesson6
                     return (Math.PI / 180) * a;
                 }
 
-                double x = p.X + shift * Math.Cos(Rad(angle));
-                double y = p.Y + shift * Math.Sin(Rad(angle));
+                double x = p.X + Math.Cos(Rad(angle));
+                double y = p.Y + Math.Sin(Rad(angle));
                 return (x, y);
             }
 
