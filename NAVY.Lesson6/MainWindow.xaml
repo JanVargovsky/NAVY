@@ -5,27 +5,75 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NAVY.Lesson6"
         mc:Ignorable="d"
-        Title="NAVY" Height="500" Width="500" WindowStartupLocation="CenterScreen"
-        DataContext="{Binding RelativeSource={RelativeSource Self}}">
-    <DockPanel>
-        <WrapPanel DockPanel.Dock="Top">
-            <WrapPanel.Resources>
-                <Style x:Key="BaseControlStyle" TargetType="{x:Type Control}">
-                    <Setter Property="Padding" Value="5"/>
-                    <Setter Property="Margin" Value="5"/>
-                    <Setter Property="MinWidth" Value="30"/>
-                </Style>
-                <Style TargetType="Button" BasedOn="{StaticResource BaseControlStyle}"/>
-                <Style TargetType="TextBox" BasedOn="{StaticResource BaseControlStyle}"/>
-            </WrapPanel.Resources>
-            <Button Click="KochSnowFlake">Koch snowflake</Button>
-            <Button Click="KochCurve">Koch curve</Button>
-            <Button Click="QuadraticFlake">Quadratic flake</Button>
-            <Button Click="SierpinskiTriangle">Sierpinski triangle</Button>
-            <Button Click="SierpinskiArrowheadTriangle">Sierpiński arrowhead curve</Button>
-            <TextBox Text="{Binding Path=Iterations}" PreviewTextInput="NumbersOnlyValidation" MinWidth="50"/>
-        </WrapPanel>
-        <Separator/>
-        <Canvas Margin="10" x:Name="canvas"/>
-    </DockPanel>
+        Title="NAVY" Height="800" Width="800" WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <Style x:Key="BaseControlStyle" TargetType="{x:Type Control}">
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="MinWidth" Value="30"/>
+        </Style>
+        <Style TargetType="Button" BasedOn="{StaticResource BaseControlStyle}"/>
+        <Style TargetType="TextBox" BasedOn="{StaticResource BaseControlStyle}"/>
+        <Style TargetType="TextBlock">
+            <Setter Property="Margin" Value="5 5 0 5"/>
+            <Setter Property="Padding" Value="5 5 0 5"/>
+        </Style>
+        <Style TargetType="CheckBox" BasedOn="{StaticResource BaseControlStyle}">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+    </Window.Resources>
+    <Grid Margin="5 0">
+        <DockPanel>
+            <StackPanel DockPanel.Dock="Top">
+                <GroupBox Header="Global Options">
+                    <CheckBox IsChecked="{Binding Path=KeepRatio}">Keep ratio</CheckBox>
+                </GroupBox>
+                <GroupBox Header="L-system">
+                    <StackPanel Orientation="Vertical">
+                        <WrapPanel Orientation="Horizontal">
+                            <TextBlock>Iterations</TextBlock>
+                            <TextBox Text="{Binding Path=LSystemIterations}" MinWidth="30"/>
+                        </WrapPanel>
+                        <Separator />
+
+                        <WrapPanel Orientation="Horizontal">
+                            <Button Click="KochSnowFlake">Koch snowflake</Button>
+                            <Button Click="KochCurve">Koch curve</Button>
+                            <Button Click="QuadraticFlake">Quadratic flake</Button>
+                            <Button Click="SierpinskiTriangle">Sierpinski triangle</Button>
+                            <Button Click="SierpinskiArrowheadTriangle">Sierpiński arrowhead curve</Button>
+                        </WrapPanel>
+                    </StackPanel>
+                </GroupBox>
+                <GroupBox DockPanel.Dock="Top" Header="Iterated Function Systems">
+                    <StackPanel Orientation="Vertical">
+                        <WrapPanel Orientation="Horizontal">
+                            <CheckBox IsChecked="{Binding Path=FilterPoints}">Filter points</CheckBox>
+                            <TextBlock>Filter average distance ratio constant</TextBlock>
+                            <TextBox Text="{Binding Path=FilterAverageDistanceMultiplyConstant}" MinWidth="25"/>
+                            <TextBlock>Iterations</TextBlock>
+                            <TextBox Text="{Binding Path=IFSIterations}" MinWidth="50"/>
+                            <TextBlock>Count of random affine transformations</TextBlock>
+                            <TextBox Text="{Binding Path=AffineTransformationCount}" MinWidth="25"/>
+                        </WrapPanel>
+                        <Separator />
+                        <WrapPanel Orientation="Horizontal">
+                            <Button Click="Fern_Presentation1">Fern (presentation1)</Button>
+                            <Button Click="Fern_Presentation2">Fern (presentation2)</Button>
+                            <Button Click="Fern_Wikipedia">Fern (wikipedia)</Button>
+                            <Button Click="Fern_Random">Fern (random)</Button>
+                        </WrapPanel>
+                    </StackPanel>
+                </GroupBox>
+            </StackPanel>
+            <StatusBar DockPanel.Dock="Bottom">
+                <TextBlock>
+                    <Run Text="Elapsed time:"/>
+                    <Run Text="{Binding Path=ElapsedTime}" />
+                    <Run Text="ms" />
+                </TextBlock>
+            </StatusBar>
+            <Canvas Margin="10" x:Name="canvas"/>
+        </DockPanel>
+    </Grid>
 </Window>
