@@ -22,14 +22,23 @@ namespace NAVY.Lesson5
             return ux;
         }
 
-        public void Train(Vector<float> u)
+        public void Train(params Vector<float>[] us)
         {
-            var ux = Normalize(u);
-            var w = ux.ToColumnMatrix() * ux.ToRowMatrix();
-            var i = Matrix<float>.Build.SparseIdentity(u.Count);
-            w -= i;
+            if (us.Length == 0)
+                return;
 
-            this.w = w;
+            int size = us[0].Count;
+            this.w = Matrix<float>.Build.Sparse(size, size);
+
+            foreach (var u in us)
+            {
+                var ux = Normalize(u);
+                var w = ux.ToColumnMatrix() * ux.ToRowMatrix();
+                var i = Matrix<float>.Build.SparseIdentity(u.Count);
+                w -= i;
+
+                this.w += w;
+            }
         }
 
         public Vector<float> Recognise(Vector<float> u)
