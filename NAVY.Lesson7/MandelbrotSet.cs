@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 
@@ -20,13 +16,14 @@ namespace NAVY.Lesson7
 
         public MandelbrotSet()
         {
-            maxIteration = 1000;
-            palette = new Color[maxIteration];
+            maxIteration = 50;
+            palette = new Color[maxIteration + 1];
             for (int i = 0; i < maxIteration; i++)
             {
                 var value = (byte)Scale(255 - i, 0, maxIteration, 0, 255);
                 palette[i] = Color.FromRgb(0, 0, value);
             }
+            palette[maxIteration] = Color.FromRgb(0, 0, 0);
         }
 
         internal static double Scale(double value, double currentScaleMin, double currentScaleMax, double desiredScaleMin, double desiredScaleMax)
@@ -34,10 +31,12 @@ namespace NAVY.Lesson7
             return desiredScaleMin + (desiredScaleMax - desiredScaleMin) * ((value - currentScaleMin) / (currentScaleMax - currentScaleMin));
         }
 
-        public Color Calculate(int px, int py, Size size)
+        public Color Calculate(int px, int py, Size size) => Calculate(px, py, (int)size.Width, (int)size.Height);
+
+        public Color Calculate(int px, int py, int width, int height)
         {
-            double x0 = Scale(px, 0, size.Width, MinX, MaxX);
-            double y0 = Scale(py, 0, size.Height, MinY, MaxY);
+            double x0 = Scale(px, 0, width, MinX, MaxX);
+            double y0 = Scale(py, 0, height, MinY, MaxY);
             double x = 0d;
             double y = 0d;
 
@@ -50,7 +49,20 @@ namespace NAVY.Lesson7
                 iteration++;
             }
 
-            return palette[iteration - 1];
+            return palette[iteration];
+        }
+
+        public Color[,] Calculate(Size size) => Calculate((int)size.Width, (int)size.Height);
+
+        public Color[,] Calculate(int width, int height)
+        {
+            var result = new Color[width, height];
+            Parallel.For(0, result.GetLength(1), y =>
+            {
+                for (int x = 0; x < result.GetLength(0); x++)
+                    result[x, y] = Calculate(x, y, width, height);
+            });
+            return result;
         }
     }
 }

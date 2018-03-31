@@ -18,6 +18,7 @@ namespace NAVY.Lesson7
             InitializeComponent();
             mandelbrotSet = new MandelbrotSet();
             Loaded += (o, e) => Render();
+            SizeChanged += (o, e) => Render();
         }
 
         void Render()
@@ -25,17 +26,20 @@ namespace NAVY.Lesson7
             Stopwatch sw = Stopwatch.StartNew();
             canvas.Children.Clear();
 
+
+            int w = (int)canvas.ActualWidth;
+            int h = (int)canvas.ActualHeight;
+            var values = mandelbrotSet.Calculate(w, h);
+
             DrawingVisual dv = new DrawingVisual();
             var size = new Size(1, 1);
-            int h = (int)canvas.ActualHeight;
-            int w = (int)canvas.ActualWidth;
             using (DrawingContext dc = dv.RenderOpen())
             {
                 for (int y = 0; y < h; y++)
                     for (int x = 0; x < w; x++)
                     {
-                        var color = mandelbrotSet.Calculate(x, y, canvas.RenderSize);
-                        var brush = new SolidColorBrush(color);
+                        
+                        var brush = new SolidColorBrush(values[x,y]);
                         dc.DrawRectangle(brush, null, new Rect(new Point(x, y), size));
                     }
                 dc.Close();
