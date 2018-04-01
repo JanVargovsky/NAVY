@@ -78,5 +78,16 @@ namespace NAVY.Lesson7
                 NotifyPropertyChanged();
             }
         }
+
+        private double zoomFactor;
+        public double ZoomFactor
+        {
+            get { return zoomFactor; }
+            set
+            {
+                zoomFactor = value;
+                NotifyPropertyChanged();
+            }
+        }
     }
 }

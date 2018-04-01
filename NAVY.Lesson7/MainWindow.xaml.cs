@@ -23,8 +23,9 @@ namespace NAVY.Lesson7
             {
                 RenderTime = 0d,
                 CalculateTime = 0d,
-                MaxIteration = 50,
+                MaxIteration = 500,
                 CanRender = false,
+                ZoomFactor = 2d,
             };
             Loaded += (o, e) =>
             {
@@ -125,10 +126,10 @@ namespace NAVY.Lesson7
 
         void ZoomIn()
         {
-            var s = viewModel.Size;
+            var z = viewModel.ZoomFactor;
+            var s = viewModel.Size =  new Size(viewModel.Size.Width / z, viewModel.Size.Height / z);
             var p = viewModel.Point;
-            viewModel.Point = new Point(p.X + s.Width / 4, p.Y + s.Height / 4);
-            viewModel.Size = new Size(s.Width / 2, s.Height / 2);
+            viewModel.Point = new Point(p.X + s.Width / z, p.Y + s.Height / z);
         }
 
         private void ZoomIn_Click(object sender, RoutedEventArgs e)
@@ -139,10 +140,11 @@ namespace NAVY.Lesson7
 
         void ZoomOut()
         {
+            var z = viewModel.ZoomFactor;
             var s = viewModel.Size;
             var p = viewModel.Point;
-            viewModel.Point = new Point(p.X - s.Width / 2, p.Y - s.Height / 2);
-            viewModel.Size = new Size(s.Width * 2, s.Height * 2);
+            viewModel.Point = new Point(p.X - s.Width / z, p.Y - s.Height / z);
+            viewModel.Size = new Size(s.Width * z, s.Height * z);
         }
 
         private void ZoomOut_Click(object sender, RoutedEventArgs e)
