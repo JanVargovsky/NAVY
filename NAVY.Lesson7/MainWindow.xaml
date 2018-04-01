@@ -8,9 +8,19 @@
         Title="Mandelbrot set" Height="450" Width="800">
     <DockPanel>
         <WrapPanel DockPanel.Dock="Top" Orientation="Horizontal">
+            <Button Click="Reset_Click">Reset</Button>
+            <Button Click="ZoomIn_Click">Zoom in</Button>
+            <Button Click="ZoomOut_Click">Zoom out</Button>
+            <Button Click="Render_Click" IsEnabled="{Binding Path=CanRender}">Render</Button>
+            
             <TextBlock>Max iteration</TextBlock>
             <TextBox Text="{Binding Path=MaxIteration}" MinWidth="50"/>
-            <Button Click="Render_Click">Render</Button>
+
+            <TextBlock Text="Point: "/>
+            <TextBox Text="{Binding Path=Point}" MinWidth="50"/>
+
+            <TextBlock Text="Size: "/>
+            <TextBox Text="{Binding Path=Size}" MinWidth="50"/>
         </WrapPanel>
         <StatusBar DockPanel.Dock="Bottom">
             <TextBlock>
@@ -25,6 +35,6 @@
                     <Run Text="ms" />
             </TextBlock>
         </StatusBar>
-        <Canvas x:Name="canvas"/>
+        <InkCanvas EditingMode="Select" x:Name="Canvas" MouseUp="Canvas_MouseUp" PreviewMouseDown="Canvas_MouseDown"/>
     </DockPanel>
 </Window>

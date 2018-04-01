@@ -1,8 +1,11 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using static NAVY.Lesson7.MandelbrotSet;
 
 namespace NAVY.Lesson7
 {
@@ -16,22 +19,35 @@ namespace NAVY.Lesson7
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = viewModel = new MainViewModel();
-            Loaded += (o, e) => Render();
+            DataContext = viewModel = new MainViewModel
+            {
+                RenderTime = 0d,
+                CalculateTime = 0d,
+                MaxIteration = 50,
+                CanRender = false,
+            };
+            Loaded += (o, e) =>
+            {
+                viewModel.Size = Canvas.RenderSize;
+                viewModel.CanRender = true;
+                Render();
+            };
         }
 
         void Render()
         {
-            canvas.Children.Clear();
+            viewModel.CanRender = false;
+            Canvas.Children.Clear();
 
             Stopwatch sw = Stopwatch.StartNew();
             var mandelbrotSet = new MandelbrotSet(viewModel.MaxIteration);
 
-            int width = (int)canvas.ActualWidth;
-            int height = (int)canvas.ActualHeight;
+            int width = (int)Canvas.ActualWidth;
+            int height = (int)Canvas.ActualHeight;
 
             WriteableBitmap writeableBitmap = new WriteableBitmap(width, height, 96, 96, PixelFormats.Pbgra32, null);
-            var values = mandelbrotSet.CalculateRaw(width, height);
+            //var values = mandelbrotSet.CalculateRaw(width, height);
+            var values = mandelbrotSet.CalculateRaw(width, height, viewModel.Point, viewModel.Size);
             //var colorizedValues = mandelbrotSet.PaletteColoring(values);
             var colorizedValues = mandelbrotSet.HistogramColoring(values);
             sw.Stop();
@@ -48,12 +64,77 @@ namespace NAVY.Lesson7
                 Source = writeableBitmap
             };
 
-            canvas.Children.Add(img);
+            Canvas.Children.Add(img);
             viewModel.RenderTime = sw.ElapsedMilliseconds;
+            viewModel.CanRender = true;
         }
 
         private void Render_Click(object sender, RoutedEventArgs e)
         {
+            Render();
+        }
+
+        Point initialShiftPoint = new Point();
+
+        private void Canvas_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left)
+            {
+                var p = e.GetPosition(Canvas);
+                viewModel.Point = p;
+            }
+            else if (e.ChangedButton == MouseButton.Right)
+            {
+                initialShiftPoint = e.GetPosition(Canvas);
+            }
+        }
+
+        private void Canvas_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left)
+            {
+                var a = viewModel.Point;
+                var b = e.GetPosition(Canvas);
+                viewModel.Size = new Size(Math.Abs(a.X - b.X), Math.Abs(a.Y - b.Y));
+            }
+            else if (e.ChangedButton == MouseButton.Right)
+            {
+                var endShiftPoint = e.GetPosition(Canvas);
+
+                var distanceX = endShiftPoint.X - initialShiftPoint.X;
+                var scaledDistanceXToSize = Scale(distanceX, 0, Canvas.ActualWidth, 0, viewModel.Size.Width);
+
+                var distanceY = endShiftPoint.Y - initialShiftPoint.Y;
+                var scaledDistanceYToSize = Scale(distanceY, 0, Canvas.ActualHeight, 0, viewModel.Size.Height);
+                var p = viewModel.Point;
+                viewModel.Point = new Point(p.X + scaledDistanceXToSize, p.Y + scaledDistanceYToSize);
+
+                Render();
+            }
+        }
+
+        private void Reset_Click(object sender, RoutedEventArgs e)
+        {
+            viewModel.Point = new Point();
+            viewModel.Size = Canvas.RenderSize;
+            Render();
+        }
+
+        private void ZoomIn_Click(object sender, RoutedEventArgs e)
+        {
+            var s = viewModel.Size;
+            var p = viewModel.Point;
+            viewModel.Point = new Point(p.X + s.Width / 4, p.Y + s.Height / 4);
+            viewModel.Size = new Size(s.Width / 2, s.Height / 2);
+            Render();
+        }
+
+        private void ZoomOut_Click(object sender, RoutedEventArgs e)
+        {
+            var s = viewModel.Size;
+            var p = viewModel.Point;
+            viewModel.Point = new Point(p.X - s.Width / 2, p.Y - s.Height / 2);
+            viewModel.Size = new Size(s.Width * 2, s.Height *2);
             Render();
         }
     }

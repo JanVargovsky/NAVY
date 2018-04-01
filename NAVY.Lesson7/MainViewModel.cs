@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows;
 
 namespace NAVY.Lesson7
 {
@@ -23,13 +24,13 @@ namespace NAVY.Lesson7
             }
         }
 
-        private double elapsedTime;
+        private double renderTime;
         public double RenderTime
         {
-            get { return elapsedTime; }
+            get { return renderTime; }
             set
             {
-                elapsedTime = value;
+                renderTime = value;
                 NotifyPropertyChanged();
             }
         }
@@ -45,10 +46,37 @@ namespace NAVY.Lesson7
             }
         }
 
-        public MainViewModel()
+        private Point point;
+        public Point Point
         {
-            elapsedTime = 0d;
-            MaxIteration = 50;
+            get { return point; }
+            set
+            {
+                point = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        private Size size;
+        public Size Size
+        {
+            get { return size; }
+            set
+            {
+                size = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        private bool canRender;
+        public bool CanRender
+        {
+            get { return canRender; }
+            set
+            {
+                canRender = value;
+                NotifyPropertyChanged();
+            }
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Media;
 
 namespace NAVY.Lesson7
@@ -24,7 +25,7 @@ namespace NAVY.Lesson7
             return desiredScaleMin + (desiredScaleMax - desiredScaleMin) * ((value - currentScaleMin) / (currentScaleMax - currentScaleMin));
         }
 
-        int CalculateRaw(int px, int py, int width, int height)
+        int CalculateRaw(double px, double py, int width, int height)
         {
             double x0 = Scale(px, 0, width, MinX, MaxX);
             double y0 = Scale(py, 0, height, MinY, MaxY);
@@ -52,6 +53,21 @@ namespace NAVY.Lesson7
             {
                 for (int x = 0; x < result.GetLength(0); x++)
                     result[x, y] = result[x, height - y - 1] = CalculateRaw(x, y, width, height);
+            });
+            return result;
+        }
+
+        public int[,] CalculateRaw(int width, int height, Point p, Size size)
+        {
+            var result = new int[width, height];
+            Parallel.For(0, result.GetLength(1), y =>
+            {
+                double ty = Scale(y, 0, height, p.Y, p.Y + size.Height);
+                for (int x = 0; x < result.GetLength(0); x++)
+                {
+                    double tx = Scale(x, 0, width, p.X, p.X + size.Width);
+                    result[x, y] = CalculateRaw(tx, ty, width, height);
+                }
             });
             return result;
         }
