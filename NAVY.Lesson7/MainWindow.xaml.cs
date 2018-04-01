@@ -81,8 +81,8 @@ namespace NAVY.Lesson7
         {
             if (e.ChangedButton == MouseButton.Left)
             {
-                var p = e.GetPosition(Canvas);
-                viewModel.Point = p;
+                //var p = e.GetPosition(Canvas);
+                //viewModel.Point = p;
             }
             else if (e.ChangedButton == MouseButton.Right)
             {
@@ -94,11 +94,11 @@ namespace NAVY.Lesson7
         {
             if (e.ChangedButton == MouseButton.Left)
             {
-                var a = viewModel.Point;
-                var b = e.GetPosition(Canvas);
-                viewModel.Size = new Size(Math.Abs(a.X - b.X), Math.Abs(a.Y - b.Y));
+                //var a = viewModel.Point;
+                //var b = e.GetPosition(Canvas);
+                //viewModel.Size = new Size(Math.Abs(a.X - b.X), Math.Abs(a.Y - b.Y));
 
-                Render();
+                //Render();
             }
             else if (e.ChangedButton == MouseButton.Right)
             {

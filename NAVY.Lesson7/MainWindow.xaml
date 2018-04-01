@@ -14,13 +14,13 @@
             <Button Click="Render_Click" IsEnabled="{Binding Path=CanRender}">Render</Button>
             
             <TextBlock>Max iteration</TextBlock>
-            <TextBox Text="{Binding Path=MaxIteration}" MinWidth="50"/>
+            <TextBox Text="{Binding Path=MaxIteration}" MinWidth="50" MaxWidth="200"/>
 
             <TextBlock Text="Point: "/>
-            <TextBox Text="{Binding Path=Point}" MinWidth="50"/>
+            <TextBox Text="{Binding Path=Point}" MinWidth="50" MaxWidth="200"/>
 
             <TextBlock Text="Size: "/>
-            <TextBox Text="{Binding Path=Size}" MinWidth="50"/>
+            <TextBox Text="{Binding Path=Size}" MinWidth="50" MaxWidth="200"/>
         </WrapPanel>
         <StatusBar DockPanel.Dock="Bottom">
             <TextBlock>
