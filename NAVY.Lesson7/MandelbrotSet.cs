@@ -1,6 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace NAVY.Lesson7
 {
@@ -14,9 +17,9 @@ namespace NAVY.Lesson7
         readonly int maxIteration;
         readonly Color[] palette;
 
-        public MandelbrotSet()
+        public MandelbrotSet(int maxIteration)
         {
-            maxIteration = 50;
+            this.maxIteration = maxIteration;
             palette = new Color[maxIteration + 1];
             for (int i = 0; i < maxIteration; i++)
             {
@@ -31,9 +34,7 @@ namespace NAVY.Lesson7
             return desiredScaleMin + (desiredScaleMax - desiredScaleMin) * ((value - currentScaleMin) / (currentScaleMax - currentScaleMin));
         }
 
-        public Color Calculate(int px, int py, Size size) => Calculate(px, py, (int)size.Width, (int)size.Height);
-
-        public Color Calculate(int px, int py, int width, int height)
+        int CalculateRaw(int px, int py, int width, int height)
         {
             double x0 = Scale(px, 0, width, MinX, MaxX);
             double y0 = Scale(py, 0, height, MinY, MaxY);
@@ -41,7 +42,9 @@ namespace NAVY.Lesson7
             double y = 0d;
 
             int iteration = 0;
-            while (x * x + y * y < 2 * 2 && iteration < maxIteration)
+            const double Threashold = 2;
+            const double ThreasholdSquared = Threashold * Threashold;
+            while (x * x + y * y < ThreasholdSquared && iteration < maxIteration)
             {
                 var xtemp = x * x - y * y + x0;
                 y = 2 * x * y + y0;
@@ -49,12 +52,19 @@ namespace NAVY.Lesson7
                 iteration++;
             }
 
-            return palette[iteration];
+            return iteration;
         }
 
-        public Color[,] Calculate(Size size) => Calculate((int)size.Width, (int)size.Height);
+        Color Calculate(int px, int py, Size size) => Calculate(px, py, (int)size.Width, (int)size.Height);
 
-        public Color[,] Calculate(int width, int height)
+        Color Calculate(int px, int py, int width, int height)
+        {
+            return palette[CalculateRaw(px, py, width, height)];
+        }
+
+        Color[,] Calculate(Size size) => Calculate((int)size.Width, (int)size.Height);
+
+        Color[,] Calculate(int width, int height)
         {
             var result = new Color[width, height];
             Parallel.For(0, result.GetLength(1), y =>
@@ -62,6 +72,85 @@ namespace NAVY.Lesson7
                 for (int x = 0; x < result.GetLength(0); x++)
                     result[x, y] = Calculate(x, y, width, height);
             });
+            return result;
+        }
+
+        public int[,] CalculateRaw(int width, int height)
+        {
+            var result = new int[width, height];
+            Parallel.For(0, result.GetLength(1) / 2 + 1, y =>
+            {
+                for (int x = 0; x < result.GetLength(0); x++)
+                    result[x, y] = result[x, height - y - 1] = CalculateRaw(x, y, width, height);
+            });
+            return result;
+        }
+
+        public Color[,] PaletteColoring(int[,] values)
+        {
+            var result = new Color[values.GetLength(0), values.GetLength(1)];
+            for (int y = 0; y < values.GetLength(1); y++)
+                for (int x = 0; x < result.GetLength(0); x++)
+                    result[x, y] = palette[values[x, y]];
+            return result;
+        }
+
+        public Color[,] HistogramColoring(int[,] values)
+        {
+            Color ColorFromHSV(double hue, double saturation, double value)
+            {
+                int hi = Convert.ToInt32(Math.Floor(hue / 60)) % 6;
+                double f = hue / 60 - Math.Floor(hue / 60);
+
+                value = value * 255;
+                byte v = Convert.ToByte(value);
+                byte p = Convert.ToByte(value * (1 - saturation));
+                byte q = Convert.ToByte(value * (1 - f * saturation));
+                byte t = Convert.ToByte(value * (1 - (1 - f) * saturation));
+
+                if (hi == 0)
+                    return Color.FromArgb(255, v, t, p);
+                else if (hi == 1)
+                    return Color.FromArgb(255, q, v, p);
+                else if (hi == 2)
+                    return Color.FromArgb(255, p, v, t);
+                else if (hi == 3)
+                    return Color.FromArgb(255, p, q, v);
+                else if (hi == 4)
+                    return Color.FromArgb(255, t, p, v);
+                else
+                    return Color.FromArgb(255, v, p, q);
+            }
+
+            int[] histogram = new int[maxIteration + 1];
+            for (int y = 0; y < values.GetLength(1); y++)
+                for (int x = 0; x < values.GetLength(0); x++)
+                    histogram[values[x, y]]++;
+
+            var hues = new double[histogram.Length];
+            for (int i = 1; i < histogram.Length; i++)
+                hues[i] = hues[i - 1] + histogram[i];
+            int total = histogram.Sum();
+            for (int i = 1; i < histogram.Length; i++)
+            {
+                hues[i] /= total;
+                hues[i] = Scale(hues[i], 0, 1, 0, 360);
+            }
+
+            const double S = 1;
+            const double L = 1;
+
+            var result = new Color[values.GetLength(0), values.GetLength(1)];
+            var black = Color.FromRgb(0, 0, 0);
+            for (int y = 0; y < values.GetLength(1); y++)
+                for (int x = 0; x < values.GetLength(0); x++)
+                {
+                    var hue = hues[values[x, y]];
+                    if (hue == 360)
+                        result[x, y] = black;
+                    else
+                        result[x, y] = ColorFromHSV(hue, S, L);
+                }
             return result;
         }
     }

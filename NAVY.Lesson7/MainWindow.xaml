@@ -6,5 +6,25 @@
         xmlns:local="clr-namespace:NAVY.Lesson7"
         mc:Ignorable="d"
         Title="Mandelbrot set" Height="450" Width="800">
-    <Canvas x:Name="canvas"/>
+    <DockPanel>
+        <WrapPanel DockPanel.Dock="Top" Orientation="Horizontal">
+            <TextBlock>Max iteration</TextBlock>
+            <TextBox Text="{Binding Path=MaxIteration}" MinWidth="50"/>
+            <Button Click="Render_Click">Render</Button>
+        </WrapPanel>
+        <StatusBar DockPanel.Dock="Bottom">
+            <TextBlock>
+                    <Run Text="Calculate time:"/>
+                    <Run Text="{Binding Path=CalculateTime}" />
+                    <Run Text="ms" />
+            </TextBlock>
+            |
+            <TextBlock>
+                    <Run Text="Render time:"/>
+                    <Run Text="{Binding Path=RenderTime}" />
+                    <Run Text="ms" />
+            </TextBlock>
+        </StatusBar>
+        <Canvas x:Name="canvas"/>
+    </DockPanel>
 </Window>

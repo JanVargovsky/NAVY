@@ -11,50 +11,49 @@ namespace NAVY.Lesson7
     /// </summary>
     public partial class MainWindow : Window
     {
-        readonly MandelbrotSet mandelbrotSet;
+        readonly MainViewModel viewModel;
 
         public MainWindow()
         {
             InitializeComponent();
-            mandelbrotSet = new MandelbrotSet();
+            DataContext = viewModel = new MainViewModel();
             Loaded += (o, e) => Render();
-            SizeChanged += (o, e) => Render();
         }
 
         void Render()
         {
-            Stopwatch sw = Stopwatch.StartNew();
             canvas.Children.Clear();
 
+            Stopwatch sw = Stopwatch.StartNew();
+            var mandelbrotSet = new MandelbrotSet(viewModel.MaxIteration);
 
-            int w = (int)canvas.ActualWidth;
-            int h = (int)canvas.ActualHeight;
-            var values = mandelbrotSet.Calculate(w, h);
+            int width = (int)canvas.ActualWidth;
+            int height = (int)canvas.ActualHeight;
 
-            DrawingVisual dv = new DrawingVisual();
-            var size = new Size(1, 1);
-            using (DrawingContext dc = dv.RenderOpen())
-            {
-                for (int y = 0; y < h; y++)
-                    for (int x = 0; x < w; x++)
-                    {
-                        
-                        var brush = new SolidColorBrush(values[x,y]);
-                        dc.DrawRectangle(brush, null, new Rect(new Point(x, y), size));
-                    }
-                dc.Close();
-            }
+            WriteableBitmap writeableBitmap = new WriteableBitmap(width, height, 96, 96, PixelFormats.Pbgra32, null);
+            var values = mandelbrotSet.CalculateRaw(width, height);
+            var colorizedValues = mandelbrotSet.HistogramColoring(values);
+            sw.Stop();
+            viewModel.CalculateTime = sw.ElapsedMilliseconds;
 
-            RenderTargetBitmap rtb = new RenderTargetBitmap(w, h, 96, 96, PixelFormats.Pbgra32);
-            rtb.Render(dv);
+            sw = Stopwatch.StartNew();
+            for (int y = 0; y < height; y++)
+                for (int x = 0; x < width; x++)
+                    writeableBitmap.SetPixel(x, y, colorizedValues[x, y]);
+            sw.Stop();
+
             Image img = new Image
             {
-                Source = rtb
+                Source = writeableBitmap
             };
 
             canvas.Children.Add(img);
-            sw.Stop();
-            Debug.WriteLine($"Render time: {sw.ElapsedMilliseconds} ms");
+            viewModel.RenderTime = sw.ElapsedMilliseconds;
+        }
+
+        private void Render_Click(object sender, RoutedEventArgs e)
+        {
+            Render();
         }
     }
 }
