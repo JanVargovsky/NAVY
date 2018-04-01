@@ -42,8 +42,9 @@ namespace NAVY.Lesson7
             Stopwatch sw = Stopwatch.StartNew();
             var mandelbrotSet = new MandelbrotSet(viewModel.MaxIteration);
 
-            int width = (int)Canvas.ActualWidth;
-            int height = (int)Canvas.ActualHeight;
+            var size = Canvas.RenderSize;
+            int width = (int)size.Width;
+            int height = (int)size.Height;
 
             WriteableBitmap writeableBitmap = new WriteableBitmap(width, height, 96, 96, PixelFormats.Pbgra32, null);
             //var values = mandelbrotSet.CalculateRaw(width, height);
@@ -96,6 +97,8 @@ namespace NAVY.Lesson7
                 var a = viewModel.Point;
                 var b = e.GetPosition(Canvas);
                 viewModel.Size = new Size(Math.Abs(a.X - b.X), Math.Abs(a.Y - b.Y));
+
+                Render();
             }
             else if (e.ChangedButton == MouseButton.Right)
             {
@@ -120,21 +123,40 @@ namespace NAVY.Lesson7
             Render();
         }
 
-        private void ZoomIn_Click(object sender, RoutedEventArgs e)
+        void ZoomIn()
         {
             var s = viewModel.Size;
             var p = viewModel.Point;
             viewModel.Point = new Point(p.X + s.Width / 4, p.Y + s.Height / 4);
             viewModel.Size = new Size(s.Width / 2, s.Height / 2);
+        }
+
+        private void ZoomIn_Click(object sender, RoutedEventArgs e)
+        {
+            ZoomIn();
             Render();
         }
 
-        private void ZoomOut_Click(object sender, RoutedEventArgs e)
+        void ZoomOut()
         {
             var s = viewModel.Size;
             var p = viewModel.Point;
             viewModel.Point = new Point(p.X - s.Width / 2, p.Y - s.Height / 2);
-            viewModel.Size = new Size(s.Width * 2, s.Height *2);
+            viewModel.Size = new Size(s.Width * 2, s.Height * 2);
+        }
+
+        private void ZoomOut_Click(object sender, RoutedEventArgs e)
+        {
+            ZoomOut();
+            Render();
+        }
+
+        private void Canvas_MouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            if (e.Delta > 0)
+                ZoomIn();
+            else if (e.Delta < 0)
+                ZoomOut();
             Render();
         }
     }

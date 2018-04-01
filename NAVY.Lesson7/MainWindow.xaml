@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NAVY.Lesson7"
         mc:Ignorable="d"
-        Title="Mandelbrot set" Height="450" Width="800">
+        Title="Mandelbrot set" Height="300" Width="500" WindowStartupLocation="CenterScreen">
     <DockPanel>
         <WrapPanel DockPanel.Dock="Top" Orientation="Horizontal">
             <Button Click="Reset_Click">Reset</Button>
@@ -35,6 +35,6 @@
                     <Run Text="ms" />
             </TextBlock>
         </StatusBar>
-        <InkCanvas EditingMode="Select" x:Name="Canvas" MouseUp="Canvas_MouseUp" PreviewMouseDown="Canvas_MouseDown"/>
+        <Canvas x:Name="Canvas" MouseUp="Canvas_MouseUp" PreviewMouseDown="Canvas_MouseDown" PreviewMouseWheel="Canvas_MouseWheel"/>
     </DockPanel>
 </Window>
