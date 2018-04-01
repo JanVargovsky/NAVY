@@ -32,6 +32,7 @@ namespace NAVY.Lesson7
 
             WriteableBitmap writeableBitmap = new WriteableBitmap(width, height, 96, 96, PixelFormats.Pbgra32, null);
             var values = mandelbrotSet.CalculateRaw(width, height);
+            //var colorizedValues = mandelbrotSet.PaletteColoring(values);
             var colorizedValues = mandelbrotSet.HistogramColoring(values);
             sw.Stop();
             viewModel.CalculateTime = sw.ElapsedMilliseconds;

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Media;
 
 namespace NAVY.Lesson7
@@ -14,18 +13,10 @@ namespace NAVY.Lesson7
         const double MaxY = 1d;
 
         readonly int maxIteration;
-        readonly Color[] palette;
 
         public MandelbrotSet(int maxIteration)
         {
             this.maxIteration = maxIteration;
-            palette = new Color[maxIteration + 1];
-            for (int i = 0; i < maxIteration; i++)
-            {
-                var value = (byte)Scale(255 - i, 0, maxIteration, 0, 255);
-                palette[i] = Color.FromRgb(0, 0, value);
-            }
-            palette[maxIteration] = Color.FromRgb(0, 0, 0);
         }
 
         internal static double Scale(double value, double currentScaleMin, double currentScaleMax, double desiredScaleMin, double desiredScaleMax)
@@ -54,26 +45,6 @@ namespace NAVY.Lesson7
             return iteration;
         }
 
-        Color Calculate(int px, int py, Size size) => Calculate(px, py, (int)size.Width, (int)size.Height);
-
-        Color Calculate(int px, int py, int width, int height)
-        {
-            return palette[CalculateRaw(px, py, width, height)];
-        }
-
-        Color[,] Calculate(Size size) => Calculate((int)size.Width, (int)size.Height);
-
-        Color[,] Calculate(int width, int height)
-        {
-            var result = new Color[width, height];
-            Parallel.For(0, result.GetLength(1), y =>
-            {
-                for (int x = 0; x < result.GetLength(0); x++)
-                    result[x, y] = Calculate(x, y, width, height);
-            });
-            return result;
-        }
-
         public int[,] CalculateRaw(int width, int height)
         {
             var result = new int[width, height];
@@ -87,6 +58,14 @@ namespace NAVY.Lesson7
 
         public Color[,] PaletteColoring(int[,] values)
         {
+            var palette = new Color[maxIteration + 1];
+            for (int i = 0; i < maxIteration; i++)
+            {
+                var value = (byte)Scale(255 - i, 0, maxIteration, 0, 255);
+                palette[i] = Color.FromRgb(0, 0, value);
+            }
+            palette[maxIteration] = Color.FromRgb(0, 0, 0);
+
             var result = new Color[values.GetLength(0), values.GetLength(1)];
             for (int y = 0; y < values.GetLength(1); y++)
                 for (int x = 0; x < result.GetLength(0); x++)
