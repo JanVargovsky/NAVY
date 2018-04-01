@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 
 namespace NAVY.Lesson7
 {
@@ -139,18 +138,16 @@ namespace NAVY.Lesson7
 
             const double S = 1;
             const double L = 1;
+            var colors = new Color[hues.Length];
+            for (int i = 0; i < colors.Length; i++)
+                colors[i] = ColorFromHSV(hues[i], S, L);
+            colors[colors.Length - 1] = Color.FromRgb(0, 0, 0);
 
             var result = new Color[values.GetLength(0), values.GetLength(1)];
             var black = Color.FromRgb(0, 0, 0);
             for (int y = 0; y < values.GetLength(1); y++)
                 for (int x = 0; x < values.GetLength(0); x++)
-                {
-                    var hue = hues[values[x, y]];
-                    if (hue == 360)
-                        result[x, y] = black;
-                    else
-                        result[x, y] = ColorFromHSV(hue, S, L);
-                }
+                    result[x, y] = colors[values[x, y]];
             return result;
         }
     }
