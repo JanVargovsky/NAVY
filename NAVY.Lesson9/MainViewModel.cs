@@ -1,6 +1,10 @@
-﻿using System;
+﻿using LiveCharts;
+using LiveCharts.Definitions.Series;
+using LiveCharts.Wpf;
+using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows.Media;
 using System.Windows.Threading;
 
 namespace NAVY.Lesson9
@@ -99,8 +103,16 @@ namespace NAVY.Lesson9
         public double CX2 => X2 - R2 / 2;
         public double CY2 => Y2 - R2 / 2;
 
+        public double RequiredSize => 2 * (L1 + L2) + 10;
+
+        readonly IChartValues phi1Series;
+        readonly IChartValues phi2Series;
+        public SeriesCollection Series { get; }
+
         public MainViewModel()
         {
+            SetInitial(RequiredSize / 2, RequiredSize / 2);
+
             const double FPS60 = 1000d / 60d;
             var interval = TimeSpan.FromMilliseconds(FPS60);
             //var interval = TimeSpan.FromMilliseconds(200);
@@ -110,6 +122,22 @@ namespace NAVY.Lesson9
                 IsEnabled = false,
             };
             timer.Tick += (o, e) => Next();
+
+            phi1Series = new ChartValues<double>();
+            phi2Series = new ChartValues<double>();
+
+            ISeriesView CreateView(IChartValues v) => new LineSeries
+            {
+                Values = v,
+                Fill = Brushes.Transparent,
+                StrokeThickness = 0.5d,
+                PointGeometry = null,
+            };
+            Series = new SeriesCollection
+            {
+                CreateView(phi1Series),
+                CreateView(phi2Series),
+            };
         }
 
         public void SetInitial(double x, double y)
@@ -128,8 +156,8 @@ namespace NAVY.Lesson9
         const double M1 = 15d;
         const double M2 = 10d;
         const double G = 9.81d;
-        const double L1 = 100d;
-        const double L2 = 60d;
+        public const double L1 = 100d;
+        public const double L2 = 60d;
         const double time = 0.2d;
         const double Alpha1 = 160;
         const double Alpha2 = 80;
@@ -142,11 +170,11 @@ namespace NAVY.Lesson9
         public void Next()
         {
             var mu = 1 + M1 / M2;
-            var d2Phi1 = (G * (Math.Sin(Phi2) * Math.Cos(Phi1 - Phi2) - mu * Math.Sin(Phi1)) - 
-                (L2 * d1Phi2 * d1Phi2 + L1 * d1Phi1 * d1Phi1 * Math.Cos(Phi1 - Phi2)) *  Math.Sin(Phi1 - Phi2)) / 
+            var d2Phi1 = (G * (Math.Sin(Phi2) * Math.Cos(Phi1 - Phi2) - mu * Math.Sin(Phi1)) -
+                (L2 * d1Phi2 * d1Phi2 + L1 * d1Phi1 * d1Phi1 * Math.Cos(Phi1 - Phi2)) * Math.Sin(Phi1 - Phi2)) /
                 (L1 * (mu - Math.Cos(Phi1 - Phi2) * Math.Cos(Phi1 - Phi2)));
 
-            var d2Phi2 = (mu * G * (Math.Sin(Phi1) * Math.Cos(Phi1 - Phi2) - Math.Sin(Phi2)) + 
+            var d2Phi2 = (mu * G * (Math.Sin(Phi1) * Math.Cos(Phi1 - Phi2) - Math.Sin(Phi2)) +
                 (mu * L1 * d1Phi1 * d1Phi1 + L2 * d1Phi2 * d1Phi2 * Math.Cos(Phi1 - Phi2)) * Math.Sin(Phi1 - Phi2)) /
                 (L2 * (mu - Math.Cos(Phi1 - Phi2) * Math.Cos(Phi1 - Phi2)));
 
@@ -155,13 +183,22 @@ namespace NAVY.Lesson9
             Phi1 += d1Phi1 * time;
             Phi2 += d1Phi2 * time;
 
-            Phi1 %= 2 * Math.PI;
-            Phi2 %= 2 * Math.PI;
+            //Phi1 %= 2 * Math.PI;
+            //Phi2 %= 2 * Math.PI;
+
+            //if (Phi1 < 0) Phi1 += 2 * Math.PI;
+            //if (Phi2 < 0) Phi2 += 2 * Math.PI;
 
             X1 = X0 + L1 * Math.Sin(Phi1);
             Y1 = Y0 - L1 * Math.Cos(Phi1);
             X2 = X0 + L1 * Math.Sin(Phi1) + L2 * Math.Sin(Phi2);
             Y2 = Y0 - L1 * Math.Cos(Phi1) - L2 * Math.Cos(Phi2);
+
+            const int MaxSeriesCount = 100;
+            if (phi1Series.Count > MaxSeriesCount) phi1Series.RemoveAt(0);
+            phi1Series.Add(Phi1 / Math.PI * 180);
+            if (phi2Series.Count > MaxSeriesCount) phi2Series.RemoveAt(0);
+            phi2Series.Add(Phi2 / Math.PI * 180);
         }
     }
 }

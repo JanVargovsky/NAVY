@@ -14,7 +14,7 @@ namespace NAVY.Lesson9
         {
             InitializeComponent();
             DataContext = viewModel = new MainViewModel();
-            Loaded += (o, e) => viewModel.SetInitial(Canvas.Width / 2, Canvas.Height / 2);
+            //Loaded += (o, e) => viewModel.SetInitial(Canvas.Width / 2, Canvas.Height / 2);
         }
 
         private void Start(object sender, RoutedEventArgs e)

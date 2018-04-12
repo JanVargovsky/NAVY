@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:NAVY.Lesson9"
+        xmlns:liveCharts="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         mc:Ignorable="d"
         Title="MainWindow" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen">
     <DockPanel>
@@ -12,27 +12,34 @@
             <Button Click="Stop">Stop</Button>
             <Button Click="Next">Next</Button>
         </WrapPanel>
-        <Canvas x:Name="Canvas" Height="450" Width="450">
-            <Canvas.Resources>
-                <Style TargetType="Line">
-                    <Setter Property="Stroke" Value="Black"/>
-                </Style>
-            </Canvas.Resources>
-            <Canvas.LayoutTransform>
-                <!--Invert Y-->
-                <MatrixTransform Matrix="1, 0, 0, -1, 0, 0" />
-            </Canvas.LayoutTransform>
-            <Line X1="{Binding Path=X0}"
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Canvas Grid.Row="0" x:Name="Canvas" Height="{Binding Path=RequiredSize}" Width="{Binding Path=RequiredSize}">
+                <Canvas.Resources>
+                    <Style TargetType="Line">
+                        <Setter Property="Stroke" Value="Black"/>
+                    </Style>
+                </Canvas.Resources>
+                <Canvas.LayoutTransform>
+                    <!--Invert Y-->
+                    <MatrixTransform Matrix="1, 0, 0, -1, 0, 0" />
+                </Canvas.LayoutTransform>
+                <Line X1="{Binding Path=X0}"
                   Y1="{Binding Path=Y0}" 
                   X2="{Binding Path=X1}" 
                   Y2="{Binding Path=Y1}" />
-            <Line X1="{Binding Path=X1}"
+                <Line X1="{Binding Path=X1}"
                   Y1="{Binding Path=Y1}" 
                   X2="{Binding Path=X2}" 
                   Y2="{Binding Path=Y2}" />
-            <Ellipse Width="{Binding Path=R0}" Height="{Binding Path=R0}" Canvas.Left="{Binding Path=CX0}" Canvas.Top="{Binding Path=CY0}" Fill="Black"/>
-            <Ellipse Width="{Binding Path=R1}" Height="{Binding Path=R1}" Canvas.Left="{Binding Path=CX1}" Canvas.Top="{Binding Path=CY1}" Fill="Red"/>
-            <Ellipse Width="{Binding Path=R2}" Height="{Binding Path=R2}" Canvas.Left="{Binding Path=CX2}" Canvas.Top="{Binding Path=CY2}" Fill="Blue"/>
-        </Canvas>
+                <Ellipse Width="{Binding Path=R0}" Height="{Binding Path=R0}" Canvas.Left="{Binding Path=CX0}" Canvas.Top="{Binding Path=CY0}" Fill="Black"/>
+                <Ellipse Width="{Binding Path=R1}" Height="{Binding Path=R1}" Canvas.Left="{Binding Path=CX1}" Canvas.Top="{Binding Path=CY1}" Fill="Red"/>
+                <Ellipse Width="{Binding Path=R2}" Height="{Binding Path=R2}" Canvas.Left="{Binding Path=CX2}" Canvas.Top="{Binding Path=CY2}" Fill="Blue"/>
+            </Canvas>
+            <liveCharts:CartesianChart Grid.Row="1" Series="{Binding Series}" Height="300" DisableAnimations="True"/>
+        </Grid>
     </DockPanel>
 </Window>
