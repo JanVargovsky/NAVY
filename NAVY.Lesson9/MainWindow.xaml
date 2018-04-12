@@ -1,0 +1,38 @@
+﻿<Window x:Class="NAVY.Lesson9.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:NAVY.Lesson9"
+        mc:Ignorable="d"
+        Title="MainWindow" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen">
+    <DockPanel>
+        <WrapPanel DockPanel.Dock="Top" Orientation="Horizontal">
+            <Button Click="Start">Start</Button>
+            <Button Click="Stop">Stop</Button>
+            <Button Click="Next">Next</Button>
+        </WrapPanel>
+        <Canvas x:Name="Canvas" Height="450" Width="450">
+            <Canvas.Resources>
+                <Style TargetType="Line">
+                    <Setter Property="Stroke" Value="Black"/>
+                </Style>
+            </Canvas.Resources>
+            <Canvas.LayoutTransform>
+                <!--Invert Y-->
+                <MatrixTransform Matrix="1, 0, 0, -1, 0, 0" />
+            </Canvas.LayoutTransform>
+            <Line X1="{Binding Path=X0}"
+                  Y1="{Binding Path=Y0}" 
+                  X2="{Binding Path=X1}" 
+                  Y2="{Binding Path=Y1}" />
+            <Line X1="{Binding Path=X1}"
+                  Y1="{Binding Path=Y1}" 
+                  X2="{Binding Path=X2}" 
+                  Y2="{Binding Path=Y2}" />
+            <Ellipse Width="{Binding Path=R0}" Height="{Binding Path=R0}" Canvas.Left="{Binding Path=CX0}" Canvas.Top="{Binding Path=CY0}" Fill="Black"/>
+            <Ellipse Width="{Binding Path=R1}" Height="{Binding Path=R1}" Canvas.Left="{Binding Path=CX1}" Canvas.Top="{Binding Path=CY1}" Fill="Red"/>
+            <Ellipse Width="{Binding Path=R2}" Height="{Binding Path=R2}" Canvas.Left="{Binding Path=CX2}" Canvas.Top="{Binding Path=CY2}" Fill="Blue"/>
+        </Canvas>
+    </DockPanel>
+</Window>

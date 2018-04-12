@@ -23,6 +23,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NAVY.Lesson7.Tests", "NAVY.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NAVY.Lesson8", "NAVY.Lesson8\NAVY.Lesson8.csproj", "{14BD7CCB-0D4E-4E7F-9B58-2D93A8A45CD2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NAVY.Lesson9", "NAVY.Lesson9\NAVY.Lesson9.csproj", "{658C2FF0-26C1-426E-9564-9699AD5EE959}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,6 +71,10 @@ Global
 		{14BD7CCB-0D4E-4E7F-9B58-2D93A8A45CD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{14BD7CCB-0D4E-4E7F-9B58-2D93A8A45CD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{14BD7CCB-0D4E-4E7F-9B58-2D93A8A45CD2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{658C2FF0-26C1-426E-9564-9699AD5EE959}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{658C2FF0-26C1-426E-9564-9699AD5EE959}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{658C2FF0-26C1-426E-9564-9699AD5EE959}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{658C2FF0-26C1-426E-9564-9699AD5EE959}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
